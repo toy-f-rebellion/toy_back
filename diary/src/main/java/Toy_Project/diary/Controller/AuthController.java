@@ -15,15 +15,31 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    // 회원가입
     @PostMapping("/signUp")
     public ResponseDto<?> signUp(@RequestBody SignUpDto requestBody) {
         ResponseDto<?> result = authService.signUp(requestBody);
         return result;
     }
 
+    // 로그인
     @PostMapping("/signIn")
     public ResponseDto<SignInResponseDto> signIn(@RequestBody SignInDto requestBody) {
         ResponseDto<SignInResponseDto> result = authService.signIn(requestBody);
+        return result;
+    }
+
+    // 이메일 중복 체크
+    @PostMapping("/emailCheck")
+    public ResponseDto<?> emailCheck(@RequestBody String email) {
+        ResponseDto<?> result = authService.emailCheck(email);
+        return result;
+    }
+
+    // 닉네임 중복 체크
+    @PostMapping("/nicknameCheck")
+    public ResponseDto<?> nicknameCheck(@RequestBody String nickname) {
+        ResponseDto<?> result = authService.nicknameCheck(nickname);
         return result;
     }
 }

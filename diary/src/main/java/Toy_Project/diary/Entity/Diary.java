@@ -37,16 +37,6 @@ public class Diary{
     @Column(name = "add_time", unique = true)
     private LocalDate addDate;
 
-//    public Map<String, Object> toMap() {
-//        Map<String, Object> diaryMap = new HashMap<>();
-//        diaryMap.put("user", user);
-//        diaryMap.put("diary_name", diaryName);
-//        diaryMap.put("diary_detail", diaryDetail);
-//        diaryMap.put("emotion", emotion);
-//        diaryMap.put("addDate", addDate);
-//        return diaryMap;
-//    }
-
     public static Diary createDiary(User user){
         Diary diary = new Diary();
         diary.setUser(user);

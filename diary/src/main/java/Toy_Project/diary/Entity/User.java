@@ -113,21 +113,6 @@ public class User {
         this.agreement = agreement;
     }
 
-    // 사용자 정보를 딕셔너리 형태로 반환
-    public Map<String, Object> toMap() {
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("id", id);
-        userMap.put("email", email);
-        userMap.put("name", name);
-        userMap.put("password", password);
-        userMap.put("nickname", nickname);
-        userMap.put("phoneNum", phoneNum);
-        userMap.put("gender", gender);
-        userMap.put("age", age);
-        userMap.put("agreement", agreement);
-        return userMap;
-    }
-
     public User(SignUpDto dto) {
         this.email = dto.getEmail();
         this.name = dto.getName();

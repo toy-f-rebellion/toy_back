@@ -8,6 +8,8 @@ import Toy_Project.diary.dto.SignInResponseDto;
 import Toy_Project.diary.dto.SignUpDto;
 import Toy_Project.diary.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,10 +21,14 @@ public class AuthService {
     @Autowired
     TokenProvider tokenProvider;
 
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     public ResponseDto<?> signUp(SignUpDto dto) {
 
         String userEmail = dto.getEmail();
+        String userPassword = dto.getPassword();
+        String userPhoneNum = dto.getPhoneNum();
 
         try {
             // email 중복 확인
@@ -36,6 +42,10 @@ public class AuthService {
 
         // UserEntity 생성
         User userEntity = new User(dto);
+
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(userPassword);
+        userEntity.setPassword(encodedPassword);
 
         try {
             // UserRepository를 이용해서 데이터베이스에 Entity 저장
@@ -52,16 +62,14 @@ public class AuthService {
         String userEmail = dto.getUserEmail();
         String userPassword = dto.getUserPassword();
 
-        try {
-            boolean existed = userRepository.existsByEmailAndPassword(userEmail, userPassword);
-            if (!existed) return ResponseDto.setFailed("Sign In Information Does Not Match");
-        } catch (Exception error) {
-            return ResponseDto.setFailed("Data Base Error");
-        }
-
         User user = null;
         try {
             user = userRepository.findByEmail(userEmail);
+            // 잘못된 이메일의 경우
+            if (user == null) return ResponseDto.setFailed("Sign In Failed");
+            // 잘못된 패스워드의 경우
+            if (!passwordEncoder.matches(userPassword, user.getPassword()))
+                return ResponseDto.setFailed("Sign In Failed");
         } catch (Exception error) {
             return ResponseDto.setFailed("Data Base Error");
         }
@@ -73,5 +81,23 @@ public class AuthService {
 
         SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, user);
         return ResponseDto.setSuccess("Sign In Success", signInResponseDto);
+    }
+
+    public ResponseDto<?> emailCheck(String email) {
+        // email 중복 확인
+        if (userRepository.existsByEmail(email)) {
+            return ResponseDto.setFailed("Existed Email");
+        }
+        // 성공시 success response 반환
+        return ResponseDto.setSuccess("can use this email", null);
+    }
+
+    public ResponseDto<?> nicknameCheck(String nickname) {
+        // email 중복 확인
+        if (userRepository.existsByNickname(nickname)) {
+            return ResponseDto.setFailed("Existed nickname");
+        }
+        // 성공시 success response 반환
+        return ResponseDto.setSuccess("can use this nickname", null);
     }
 }
