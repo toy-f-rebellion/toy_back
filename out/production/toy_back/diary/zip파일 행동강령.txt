@@ -1,0 +1,55 @@
+
+
+1. Mysql에 toy라는 스키마를 생성한다.
+2. 메인 스프링어플리케이션을 구동한다.
+3. Mysql에 들어가서 확인한다.
+
+
+-------------------------------- 알아둬야 할 사항들 ----------------------------------
+application.properties에 
+
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/toy?serverTimezone=UTC&characterEncoding=UTF-8
+// example? db
+spring.datasource.username=root
+spring.datasource.password=0000
+
+이렇게 추가가 되었는데 toy는 스키마 이름이고 이름과 비밀번호를 알맞게 설정
+
+
+
+
+build.gradle을
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.2'
+	id 'io.spring.dependency-management' version '1.1.2'
+}
+
+group = 'Toy_Project'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+이렇게 수정했는데 MySQL 연동과 스프링 일부 의존성을 추가하기 위해 수정해 두었음.
