@@ -34,6 +34,10 @@ public class AuthService {
             // email 중복 확인
             if (userRepository.existsByEmail(userEmail))
                 return ResponseDto.setFailed("Existed Email");
+            // phoneNum 중복 확인
+            if (userRepository.existsByPhoneNum(userPhoneNum)) {
+                return ResponseDto.setFailed("Existed PhoneNum");
+            }
 
         } catch (Exception error) {
             return ResponseDto.setFailed("Data Base Error");
