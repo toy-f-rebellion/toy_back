@@ -2,10 +2,7 @@ package Toy_Project.diary.service;
 
 import Toy_Project.diary.Entity.User;
 import Toy_Project.diary.Repository.UserRepository;
-import Toy_Project.diary.dto.ResponseDto;
-import Toy_Project.diary.dto.SignInDto;
-import Toy_Project.diary.dto.SignInResponseDto;
-import Toy_Project.diary.dto.SignUpDto;
+import Toy_Project.diary.dto.*;
 import Toy_Project.diary.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -87,18 +84,20 @@ public class AuthService {
         return ResponseDto.setSuccess("Sign In Success", signInResponseDto);
     }
 
-    public ResponseDto<?> emailCheck(String email) {
+    public ResponseDto<?> emailCheck(ExistsCheckDto dto) {
+        String checkEmail = dto.getCheck();
         // email 중복 확인
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(checkEmail)) {
             return ResponseDto.setFailed("Existed Email");
         }
         // 성공시 success response 반환
         return ResponseDto.setSuccess("can use this email", null);
     }
 
-    public ResponseDto<?> nicknameCheck(String nickname) {
-        // email 중복 확인
-        if (userRepository.existsByNickname(nickname)) {
+    public ResponseDto<?> nicknameCheck(ExistsCheckDto dto) {
+        String checkNickname = dto.getCheck();
+        // nickname 중복 확인
+        if (userRepository.existsByNickname(checkNickname)) {
             return ResponseDto.setFailed("Existed nickname");
         }
         // 성공시 success response 반환
