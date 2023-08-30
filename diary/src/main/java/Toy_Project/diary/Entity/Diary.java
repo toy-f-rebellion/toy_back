@@ -1,4 +1,5 @@
 package Toy_Project.diary.Entity;
+import Toy_Project.diary.dto.DiaryDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class Diary{
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nickname", referencedColumnName = "nickname")
+    @JoinColumn(name = "email", referencedColumnName = "email")
     private User user;
 
     @Id
@@ -46,5 +47,6 @@ public class Diary{
         diary.setAddDate(diary.getAddDate());
         return diary;
     }
+
 }
 
