@@ -1,9 +1,6 @@
 package Toy_Project.diary.Controller;
 
-import Toy_Project.diary.dto.ResponseDto;
-import Toy_Project.diary.dto.SignInDto;
-import Toy_Project.diary.dto.SignInResponseDto;
-import Toy_Project.diary.dto.SignUpDto;
+import Toy_Project.diary.dto.*;
 import Toy_Project.diary.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +28,15 @@ public class AuthController {
 
     // 이메일 중복 체크
     @PostMapping("/emailCheck")
-    public ResponseDto<?> emailCheck(@RequestBody String email) {
-        ResponseDto<?> result = authService.emailCheck(email);
+    public ResponseDto<?> emailCheck(@RequestBody ExistsCheckDto requestBody) {
+        ResponseDto<?> result = authService.emailCheck(requestBody);
         return result;
     }
 
     // 닉네임 중복 체크
     @PostMapping("/nicknameCheck")
-    public ResponseDto<?> nicknameCheck(@RequestBody String nickname) {
-        ResponseDto<?> result = authService.nicknameCheck(nickname);
+    public ResponseDto<?> nicknameCheck(@RequestBody ExistsCheckDto requestBody) {
+        ResponseDto<?> result = authService.nicknameCheck(requestBody);
         return result;
     }
 }
