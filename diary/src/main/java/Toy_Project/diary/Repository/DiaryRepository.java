@@ -15,4 +15,6 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, String> {
 
     Diary findByAddDateAndUser(LocalDate addDate, User user);
+    boolean existsByAddDateAndUser(LocalDate addDate, User user);
+
 }
