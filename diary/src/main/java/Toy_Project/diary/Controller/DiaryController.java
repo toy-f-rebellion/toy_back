@@ -47,4 +47,18 @@ public class DiaryController {
         ResponseDto<DiaryResponseDto> result = diaryService.getDiaryByDate(addDate, userEmail);
         return result;
     }
+
+    @PutMapping("/edit")
+    public ResponseDto<?> editDiary(@RequestBody DiaryDto requestBody, @AuthenticationPrincipal String userEmail) {
+        ResponseDto<?> result = diaryService.editDiary(requestBody, userEmail);
+        return result;
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseDto<?> deleteDiary(@RequestParam LocalDate addDate, @AuthenticationPrincipal String userEmail) {
+        ResponseDto<?> result = diaryService.deleteDiaryByDate(addDate, userEmail);
+        return result;
+    }
+
+
 }
