@@ -8,23 +8,36 @@ import Toy_Project.diary.dto.DiaryDto;
 import Toy_Project.diary.dto.DiaryResponseDto;
 import Toy_Project.diary.dto.ResponseDto;
 import Toy_Project.diary.dto.SignInResponseDto;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Dictionary;
 import java.util.Optional;
+
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.HashMap;
+
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DiaryService {
+    WebClient webClient = WebClient.create("http://0.0.0.0:5000");
 
     @Autowired DiaryRepository diaryRepository;
     @Autowired UserRepository userRepository;
 
     // 일기 작성
+    @SneakyThrows
     public ResponseDto<?> createDiary(DiaryDto dto, String userEmail) {
 
         String userDiaryDetail = dto.getDiaryDetail();
@@ -46,8 +59,24 @@ public class DiaryService {
         String userDiaryName = user.getEmail() + ' ' + userAddDate;
 
         // 감정 판단 과정 - userDiaryDetail을 이용하여 요청을 생성하고 특정 API에 보내서 감정 값을 받아옴
-        String userEmotion = "기쁨";
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> map = new HashMap<>();
+        map.put("text", userDiaryDetail);
+        String detail_json = mapper.writeValueAsString(map);
         // Webclient
+        Mono<String> responseMono = webClient.post()
+                .uri("/predict")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(detail_json) // 여기에 JSON 형식의 데이터가 들어가야 합니다.
+                .retrieve()
+                .bodyToMono(String.class);
+
+        String emotion = responseMono.block();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(emotion);
+        String userEmotion = rootNode.path("emotion").asText();
+
 
         // DiaryEntity 생성
         Diary userDiary = new Diary();
@@ -116,7 +145,15 @@ public class DiaryService {
         String userDiaryName = user.getEmail() + ' ' + userAddDate;
 
         // 감정 판단 과정 - userDiaryDetail을 이용하여 요청을 생성하고 특정 API에 보내서 감정 값을 받아옴
-        String userEmotion = "기쁨";
+
+        Mono<String> responseMono = webClient.post()
+                .uri("/predict")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userDiaryDetail) // 여기에 JSON 형식의 데이터가 들어가야 합니다.
+                .retrieve()
+                .bodyToMono(String.class);
+
+        String userEmotion = responseMono.block();
         // Webclient
 
         // DiaryEntity 생성
