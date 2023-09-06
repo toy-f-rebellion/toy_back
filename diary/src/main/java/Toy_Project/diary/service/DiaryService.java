@@ -31,7 +31,7 @@ import java.util.HashMap;
 @Transactional
 @RequiredArgsConstructor
 public class DiaryService {
-    WebClient webClient = WebClient.create("http://0.0.0.0:5000");
+    WebClient webClient = WebClient.create("http://localhost:5000");
 
     @Autowired DiaryRepository diaryRepository;
     @Autowired UserRepository userRepository;
