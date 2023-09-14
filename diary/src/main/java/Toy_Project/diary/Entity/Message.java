@@ -1,10 +1,21 @@
 package Toy_Project.diary.Entity;
 import Toy_Project.diary.Entity.Diary;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-@Entity
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name="Message")
 @Table(name = "message")
 public class Message{
 
@@ -12,15 +23,15 @@ public class Message{
     @JoinColumn(name = "diary_name", referencedColumnName = "diary_name")
     private Diary diary;
 
-    @Column(name = "conversation")
-    private String conversation;
+
+    @Convert(converter = ConversationConverter.class) // @Convert 어노테이션을 사용하여 컨버터를 지정
+    @Column(name = "conversation", columnDefinition = "TEXT")
+    private Map<String,String> conversation;
 
     @Id
     @Column(name = "message_id")
-    private String message_id;
-
-    @Column(name = "add_time")
-    private Date add_time;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long message_id;
 
 }
 
