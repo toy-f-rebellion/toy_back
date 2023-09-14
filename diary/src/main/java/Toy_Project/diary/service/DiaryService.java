@@ -64,9 +64,10 @@ public class DiaryService {
         Map<String, String> map = new HashMap<>();
         map.put("text", userDiaryDetail);
         String detail_json = mapper.writeValueAsString(map);
+
         // Webclient
         Mono<String> responseMono = webClient.post()
-                .uri("/predict")
+                .uri("http://3.36.100.202:5000/predict")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(detail_json) // 여기에 JSON 형식의 데이터가 들어가야 합니다.
                 .retrieve()
@@ -147,7 +148,7 @@ public class DiaryService {
         // 감정 판단 과정 - userDiaryDetail을 이용하여 요청을 생성하고 특정 API에 보내서 감정 값을 받아옴
 
         Mono<String> responseMono = webClient.post()
-                .uri("/predict")
+                .uri("http://3.36.100.202:5000/predict")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(userDiaryDetail) // 여기에 JSON 형식의 데이터가 들어가야 합니다.
                 .retrieve()
@@ -174,6 +175,7 @@ public class DiaryService {
         return ResponseDto.setSuccess("edit Successful", userEmotion);
     }
 
+    // 일기 삭제
     public ResponseDto<?> deleteDiaryByDate(LocalDate addDate, String userEmail) {
         User user = userRepository.findByEmail(userEmail);
 
@@ -196,7 +198,7 @@ public class DiaryService {
             return ResponseDto.setFailed("Data Base Error");
         }
 
-        return ResponseDto.setSuccess("Delete Successful", addDate);
+        return ResponseDto.setSuccess("Successfully deleted the diary", addDate);
 
     }
 

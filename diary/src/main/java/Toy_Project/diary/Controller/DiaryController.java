@@ -36,24 +36,28 @@ public class DiaryController {
         return "로그인된 사용자는 " + userEmail + " 입니다. ";
     }
 
+    // 일기 작성
     @PostMapping("/create")
     public ResponseDto<?> createDiary(@RequestBody DiaryDto requestBody, @AuthenticationPrincipal String userEmail) {
         ResponseDto<?> result = diaryService.createDiary(requestBody, userEmail);
         return result;
     }
 
+    // 일기 불러오기
     @GetMapping("/view")
     public ResponseDto<DiaryResponseDto> viewDiary(@RequestParam LocalDate addDate, @AuthenticationPrincipal String userEmail) {
         ResponseDto<DiaryResponseDto> result = diaryService.getDiaryByDate(addDate, userEmail);
         return result;
     }
 
+    // 일기 수정
     @PutMapping("/edit")
     public ResponseDto<?> editDiary(@RequestBody DiaryDto requestBody, @AuthenticationPrincipal String userEmail) {
         ResponseDto<?> result = diaryService.editDiary(requestBody, userEmail);
         return result;
     }
 
+    // 일기 삭제
     @DeleteMapping("/delete")
     public ResponseDto<?> deleteDiary(@RequestParam LocalDate addDate, @AuthenticationPrincipal String userEmail) {
         ResponseDto<?> result = diaryService.deleteDiaryByDate(addDate, userEmail);

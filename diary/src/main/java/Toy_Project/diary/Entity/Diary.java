@@ -29,7 +29,7 @@ public class Diary{
     @Column(name = "diary_name", unique = true)
     private String diaryName;
 
-    @Column(name = "diary_detail")
+    @Column(name = "diary_detail", columnDefinition = "TEXT")
     private String diaryDetail;
 
     @Column(name = "emotion")

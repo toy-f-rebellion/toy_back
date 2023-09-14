@@ -17,4 +17,6 @@ public interface DiaryRepository extends JpaRepository<Diary, String> {
     Diary findByAddDateAndUser(LocalDate addDate, User user);
     boolean existsByAddDateAndUser(LocalDate addDate, User user);
 
+    boolean existsByDiaryName(String diaryName);
+    Diary findByDiaryName(String diaryName);
 }
