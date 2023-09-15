@@ -192,3 +192,107 @@ or
 &nbsp;&nbsp;    "data": null  
 }  
 해당 날짜의 일기를 삭제하고 성공 여부를 반환한다.  
+
+## 3. MessageController
+### 3-1. **채팅 저장** POST : /api/message/save
+- request
+  - header
+  ```
+      Key : Authorization
+      Value : Bearer + 로그인 시 받은 Token
+  ```
+
+  - Body
+
+  ```
+    {
+    "diaryName": "user3@email.com 2023-09-05",
+    "conversation": { "role": "user", "content": "오늘 너무너무 힘들다." }
+     } 
+  ```
+ 
+ - response
+
+```
+{
+    "result": true,
+    "message": "Message saved complete",
+    "data": {
+        "role": "user",
+        "content": "오늘 너무너무 힘들다."
+    }
+}
+```
+
+### 3-2 날짜 별 채팅 조회 GET : /api/message/view
+- request
+  - header
+  ```
+      Key : Authorization
+      Value : Bearer + 로그인 시 받은 Token
+  ```
+  ```
+  http://localhost:8080/api/message/view?addDate=2023-09-02
+  ```
+  
+	
+    - addDate=날짜 를 통해 해당 날짜의 일기를 조회한다.
+    - body는 사용하지 않으며 url로 쿼리를 전송하는 Get 방식
+
+- response
+```
+{
+    "result": true,
+    "message": "Message Find Complete",
+    "data": {
+        "diaryName": "user3@email.com 2023-09-02",
+        "conversation": [
+            {
+                "role": "user",
+                "content": "야 말해봐"
+            },
+            {
+                "role": "assistant",
+                "content": "무엇을 말씀드릴까요? 무엇에 대해 대화하고 싶으신가요?"
+            },
+            {
+                "role": "user",
+                "content": "1 2 3 1 2 3이 숫자를 기억해"
+            },
+            {
+                "role": "assistant",
+                "content": "알겠습니다. 숫자를 기억해야 한다는 의미인가요? 제가 도와드릴 수 있을까요?"
+            },
+            {
+                "role": "user",
+                "content": "네가 기억하라고 했던 숫자가 뭐야"
+            },
+        ]
+    }
+}
+```
+
+### 3-3. 채팅 삭제 DELETE : /api/message/delete
+
+- request
+  - header
+  ```
+      Key : Authorization
+      Value : Bearer + 로그인 시 받은 Token
+  ```
+  ```
+  http://localhost:8080/api/message/delete?addDate=2023-01-01
+  ```
+
+    
+    - addDate=날짜 를 통해 해당 날짜의 일기를 조회한다.
+    - body는 사용하지 않으며 url로 쿼리를 전송하는 방식
+    
+- response
+```
+{
+    "result": true,
+    "message": "Message Deletion Completed",
+    "data": "2023-09-05"
+}
+```
