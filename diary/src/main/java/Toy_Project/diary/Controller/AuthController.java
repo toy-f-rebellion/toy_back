@@ -3,7 +3,10 @@ package Toy_Project.diary.Controller;
 import Toy_Project.diary.dto.*;
 import Toy_Project.diary.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +29,13 @@ public class AuthController {
         return result;
     }
 
+    // 회원 탈퇴
+    @DeleteMapping("/delete")
+    public ResponseDto<?> deleteUser(@AuthenticationPrincipal String userEmail) {
+        ResponseDto<?> result = authService.deleteUser(userEmail);
+        return result;
+    }
+
     // 이메일 중복 체크
     @PostMapping("/emailCheck")
     public ResponseDto<?> emailCheck(@RequestBody ExistsCheckDto requestBody) {
@@ -39,4 +49,5 @@ public class AuthController {
         ResponseDto<?> result = authService.nicknameCheck(requestBody);
         return result;
     }
+
 }
