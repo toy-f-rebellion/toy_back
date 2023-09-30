@@ -1,5 +1,6 @@
 package Toy_Project.diary.service;
 
+import Toy_Project.diary.Entity.Diary;
 import Toy_Project.diary.Entity.User;
 import Toy_Project.diary.Repository.UserRepository;
 import Toy_Project.diary.dto.*;
@@ -82,6 +83,22 @@ public class AuthService {
 
         SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, user);
         return ResponseDto.setSuccess("Sign In Success", signInResponseDto);
+    }
+
+    public ResponseDto<?> deleteUser(String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+
+        try {
+            if (user == null) {
+                return ResponseDto.setFailed("user not existed");
+            }
+            userRepository.delete(user);
+        } catch (Exception error) {
+            return ResponseDto.setFailed("Data Base Error");
+        }
+
+        return ResponseDto.setSuccess("Successfully deleted user", userEmail);
+
     }
 
     public ResponseDto<?> emailCheck(ExistsCheckDto dto) {
