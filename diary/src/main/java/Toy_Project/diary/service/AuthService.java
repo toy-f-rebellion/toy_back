@@ -224,24 +224,31 @@ public class AuthService {
             return ResponseDto.setFailed("Database Error");
         }
 
-        String filename = user.getFilename();
-        Path file = Paths.get(System.getProperty("user.dir"), "diary", "src", "main", "resources", "static", "files", filename);
-        Resource resource = null;
+        if (user.getFilename() != null) {
+            String filename = user.getFilename();
+            Path file = Paths.get(System.getProperty("user.dir"), "diary", "src", "main", "resources", "static", "files", filename);
+            Resource resource = null;
 
-        try {
-            resource = new UrlResource(file.toUri());
-            if (resource.exists() && resource.isReadable()) {
-                // ProfileResponseDto 생성 및 필요한 정보 설정
-                ProfileResponseDto profileResponseDto = new ProfileResponseDto(user.getNickname(), resource.getURL().toString());
+            try {
+                resource = new UrlResource(file.toUri());
+                if (resource.exists() && resource.isReadable()) {
+                    // ProfileResponseDto 생성 및 필요한 정보 설정
+                    ProfileResponseDto profileResponseDto = new ProfileResponseDto(user.getNickname(), resource.getURL().toString());
 
-                // 성공 응답 반환
-                return ResponseDto.setSuccess("Profile Photo retrieved successfully", profileResponseDto);
-            } else {
-                return ResponseDto.setFailed("Resource not found or not readable");
+                    // 성공 응답 반환
+                    return ResponseDto.setSuccess("Profile Photo retrieved successfully", profileResponseDto);
+                } else {
+                    return ResponseDto.setFailed("Resource not found or not readable");
+                }
+            } catch (IOException e) {
+                return ResponseDto.setFailed("Bad Request Error");
             }
-        } catch (IOException e) {
-            return ResponseDto.setFailed("Bad Request Error");
         }
+        else {
+            ProfileResponseDto profileResponseDto = new ProfileResponseDto(user.getNickname(), null);
+            return ResponseDto.setSuccess("Profile 사진은 없음", profileResponseDto);
+        }
+
     }
 
 
