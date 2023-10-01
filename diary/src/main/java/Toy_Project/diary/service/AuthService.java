@@ -6,8 +6,12 @@ import Toy_Project.diary.Repository.UserRepository;
 import Toy_Project.diary.dto.*;
 import Toy_Project.diary.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.nio.file.Path;
@@ -212,7 +217,7 @@ public class AuthService {
         return ResponseDto.setSuccess("Nickname saved successfully", nickname);
     }
 
-    // 프로필 조회
+    // 닉네임 조회를 위한 프로필 조회
     public ResponseDto<ProfileResponseDto> getProfilePhoto(String userEmail) {
         User user = userRepository.findByEmail(userEmail);
 
@@ -249,6 +254,49 @@ public class AuthService {
             return ResponseDto.setSuccess("Profile 사진은 없음", profileResponseDto);
         }
 
+    }
+
+
+    // 프로필 사진만 조회
+    public ResponseEntity<FileSystemResource> getPhoto(String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+
+        try {
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (user.getFilename() != null) {
+            String filename = user.getFilename();
+            Path file = Paths.get(System.getProperty("user.dir"), "diary", "src", "main", "resources", "static", "files", filename);
+            Resource resource = null;
+
+            // 이미지 파일을 바이트 배열로 읽기
+            byte[] imageBytes;
+            try {
+                imageBytes = Files.readAllBytes(file);
+            } catch (IOException e) {
+                // 파일 읽기 실패 시 404 에러 반환
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            // 이미지 파일을 응답에 포함시키기 위해 Resource로 변환
+            FileSystemResource imageResource = new FileSystemResource(file.toFile());
+
+            // HTTP 응답 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG); // 이미지 파일 형식에 따라 MediaType 설정
+
+            // 이미지 파일을 ResponseEntity로 감싸서 반환
+            return new ResponseEntity<>(imageResource, headers, HttpStatus.OK);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(null, headers, HttpStatus.OK);
     }
 
 

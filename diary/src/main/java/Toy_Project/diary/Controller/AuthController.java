@@ -3,6 +3,8 @@ package Toy_Project.diary.Controller;
 import Toy_Project.diary.dto.*;
 import Toy_Project.diary.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,10 +53,17 @@ public class AuthController {
         return result;
     }
 
-    // 프로필 보기
+    // 프로필 보기 (닉네임 보기를 위한)
     @GetMapping("/viewProfile")
     public ResponseDto<ProfileResponseDto> getProfilePhoto(@AuthenticationPrincipal String userEmail) {
         ResponseDto<ProfileResponseDto> result = authService.getProfilePhoto(userEmail);
+        return result;
+    }
+
+    // 프로필 사진 보기
+    @GetMapping("/viewPhoto")
+    public ResponseEntity<FileSystemResource> getPhoto(@AuthenticationPrincipal String userEmail) {
+        ResponseEntity<FileSystemResource> result = authService.getPhoto(userEmail);
         return result;
     }
 
