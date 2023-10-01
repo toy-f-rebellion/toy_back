@@ -48,6 +48,12 @@ public class User {
     @NotNull
     private boolean agreement;
 
+    private String filename;
+
+    private String filepath;
+
+
+
     // 기본적인 getter와 setter 모음
     public String getEmail() {
         return email;
