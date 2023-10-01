@@ -5,6 +5,7 @@ import Toy_Project.diary.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -33,6 +34,27 @@ public class AuthController {
     @DeleteMapping("/delete")
     public ResponseDto<?> deleteUser(@AuthenticationPrincipal String userEmail) {
         ResponseDto<?> result = authService.deleteUser(userEmail);
+        return result;
+    }
+
+    // 프로필 사진 등록 및 수정
+    @PostMapping("/setPhoto")
+    public ResponseDto<?> setProfilePhoto(@RequestBody MultipartFile file, @AuthenticationPrincipal String userEmail) {
+        ResponseDto<?> result = authService.setProfilePhoto(file, userEmail);
+        return result;
+    }
+
+    // 닉네임 등록 및 수정
+    @PostMapping("/setNickname")
+    public ResponseDto<?> setNickName(@RequestBody String nickname, @AuthenticationPrincipal String userEmail) {
+        ResponseDto<?> result = authService.setNickname(nickname, userEmail);
+        return result;
+    }
+
+    // 프로필 보기
+    @GetMapping("/viewProfile")
+    public ResponseDto<ProfileResponseDto> getProfilePhoto(@AuthenticationPrincipal String userEmail) {
+        ResponseDto<ProfileResponseDto> result = authService.getProfilePhoto(userEmail);
         return result;
     }
 
