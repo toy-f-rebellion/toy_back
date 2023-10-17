@@ -142,7 +142,7 @@ or
 - 일기를 작성하면 일기 저장 로직이 구현되어 있는 DiaryService.createDiary 부분에서 감정 평가에 대한 FastApi를 호출 후 diaryDetail 내용에 대한 감정평가까지 이뤄질 예정.
 - diaryName 이라는 변수는 이메일 + 날짜를 조합한 고유 아이디 값을 생성하여 저장한다. (ex. user3@email.com 2023-08-30)
 - 일기가 저장된 후 일기에 대한 감정 결과만 반환한다.
-#### ※일기가 저장 될 때 사용된 AI API GitHub : https://github.com/toy-f-rebellion/toy_AI_Flask_api
+#### ※ 일기가 저장 될 때 사용된 감정분류 API의 GitHub : https://github.com/toy-f-rebellion/toy_AI_Flask_api
 
 ### 2-2 날짜 별 일기 조회 GET : /api/diary/view
 - request
